@@ -3,161 +3,220 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Станислав Никулин — AI Consultant</title>
+<title>Stas VSpandexe — AI Consultant</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Inter:wght@300;400;600;700;900&display=swap');
 
   :root {
     --cyan: #00DAD0;
     --purple: #7c3aed;
-    --pink: #e879f9;
+    --pink: #ff2d78;
     --dark: #05050f;
-    --card: #0d0d1a;
-    --border: rgba(0, 218, 208, 0.15);
+    --card: #0a0a18;
+    --border: rgba(0,218,208,0.15);
     --text: #c8d6e5;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html { scroll-behavior: smooth; }
+
   body {
     background: var(--dark);
     color: var(--text);
     font-family: 'Inter', sans-serif;
-    min-height: 100vh;
     overflow-x: hidden;
   }
 
-  /* Grid scanlines */
+  /* SCANLINES */
   body::before {
     content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,218,208,0.015) 2px, rgba(0,218,208,0.015) 4px),
-      repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,218,208,0.008) 40px, rgba(0,218,208,0.008) 41px);
+    position: fixed; inset: 0; z-index: 100;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px);
     pointer-events: none;
-    z-index: 0;
   }
 
-  /* Ambient glow */
-  body::after {
-    content: '';
-    position: fixed;
-    width: 600px; height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
-    top: -100px; right: -100px;
-    pointer-events: none;
-    z-index: 0;
-    animation: pulse-glow 6s ease-in-out infinite;
-  }
-
-  @keyframes pulse-glow {
-    0%, 100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.1); }
-  }
-
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 24px;
+  /* ───── HERO ───── */
+  .hero {
     position: relative;
-    z-index: 1;
-  }
-
-  /* NAV */
-  nav {
-    padding: 20px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .nav-logo {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--cyan);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  .nav-status {
+    min-height: 100vh;
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: rgba(200,214,229,0.5);
+    overflow: hidden;
   }
 
-  .status-dot {
-    width: 7px; height: 7px;
+  /* grid bg */
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(90deg, rgba(0,218,208,0.04) 0px, rgba(0,218,208,0.04) 1px, transparent 1px, transparent 60px),
+      repeating-linear-gradient(0deg, rgba(0,218,208,0.04) 0px, rgba(0,218,208,0.04) 1px, transparent 1px, transparent 60px);
+    z-index: 0;
+  }
+
+  /* purple bloom top-left */
+  .hero-bloom {
+    position: absolute;
+    width: 700px; height: 700px;
     border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 65%);
+    top: -200px; left: -200px;
+    pointer-events: none; z-index: 0;
+    animation: bloom-pulse 7s ease-in-out infinite;
+  }
+
+  @keyframes bloom-pulse {
+    0%,100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+
+  /* character image - right side */
+  .hero-character {
+    position: absolute;
+    right: -30px; bottom: 0;
+    height: 100%;
+    max-height: 100vh;
+    width: 55%;
+    object-fit: contain;
+    object-position: right bottom;
+    z-index: 1;
+    mask-image: linear-gradient(to left, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.6) 65%, transparent 85%),
+                linear-gradient(to top, rgba(0,0,0,0.0) 0%, black 8%);
+    -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.95) 40%, rgba(0,0,0,0.6) 65%, transparent 85%),
+                        linear-gradient(to top, rgba(0,0,0,0.0) 0%, black 8%);
+    -webkit-mask-composite: destination-in;
+    mask-composite: intersect;
+    filter: saturate(1.15) contrast(1.05);
+    animation: char-float 8s ease-in-out infinite;
+  }
+
+  @keyframes char-float {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* scanner line over character */
+  .hero-scanner {
+    position: absolute;
+    right: 0; top: 0;
+    width: 55%; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    box-shadow: 0 0 20px var(--cyan), 0 0 40px rgba(0,218,208,0.4);
+    z-index: 2;
+    animation: scan-down 4s linear infinite;
+    opacity: 0.6;
+  }
+
+  @keyframes scan-down {
+    0% { top: 0%; opacity: 0; }
+    5% { opacity: 0.6; }
+    95% { opacity: 0.6; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  /* HUD corners */
+  .hud {
+    position: absolute; z-index: 3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(0,218,208,0.5);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    line-height: 1.8;
+    pointer-events: none;
+  }
+
+  .hud-tl { top: 24px; left: 24px; }
+  .hud-tr { top: 24px; right: 24px; text-align: right; }
+  .hud-bl { bottom: 24px; left: 24px; }
+  .hud-br { bottom: 24px; right: 24px; text-align: right; }
+
+  .hud-dot {
+    display: inline-block;
+    width: 6px; height: 6px; border-radius: 50%;
     background: var(--cyan);
+    margin-right: 6px;
     animation: blink 2s ease-in-out infinite;
+    vertical-align: middle;
   }
 
   @keyframes blink {
-    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--cyan); }
-    50% { opacity: 0.3; box-shadow: none; }
+    0%,100% { opacity: 1; box-shadow: 0 0 6px var(--cyan); }
+    50% { opacity: 0.2; box-shadow: none; }
   }
 
-  /* HERO */
-  .hero {
-    padding: 80px 0 60px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 40px;
-    align-items: center;
+  /* corner brackets */
+  .corner { position: absolute; width: 20px; height: 20px; z-index: 3; }
+  .corner-tl { top: 24px; left: 24px; border-top: 1px solid rgba(0,218,208,0.4); border-left: 1px solid rgba(0,218,208,0.4); }
+  .corner-tr { top: 24px; right: 24px; border-top: 1px solid rgba(0,218,208,0.4); border-right: 1px solid rgba(0,218,208,0.4); }
+  .corner-bl { bottom: 24px; left: 24px; border-bottom: 1px solid rgba(0,218,208,0.4); border-left: 1px solid rgba(0,218,208,0.4); }
+  .corner-br { bottom: 24px; right: 24px; border-bottom: 1px solid rgba(0,218,208,0.4); border-right: 1px solid rgba(0,218,208,0.4); }
+
+  /* hero content */
+  .hero-content {
+    position: relative; z-index: 3;
+    padding: 0 60px;
+    max-width: 55%;
   }
 
-  .hero-tag {
+  .hero-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--cyan);
-    letter-spacing: 3px;
+    font-size: 11px;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    margin-bottom: 20px;
+    color: var(--cyan);
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 20px;
   }
 
-  .hero-tag::before {
+  .hero-label::before {
     content: '';
-    display: block;
-    width: 30px; height: 1px;
+    width: 24px; height: 1px;
     background: var(--cyan);
   }
 
   h1 {
-    font-size: clamp(36px, 6vw, 56px);
+    font-size: clamp(52px, 8vw, 100px);
     font-weight: 900;
-    line-height: 1.05;
+    line-height: 0.92;
     color: #fff;
-    margin-bottom: 8px;
-    letter-spacing: -1px;
+    letter-spacing: -3px;
+    margin-bottom: 10px;
+    position: relative;
   }
 
-  .name-accent {
-    background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 60%, var(--pink) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  h1 .exclaim {
+    color: var(--pink);
+    display: inline-block;
+    animation: exclaim-pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes exclaim-pulse {
+    0%,100% { text-shadow: 0 0 20px rgba(255,45,120,0.5); }
+    50% { text-shadow: 0 0 40px rgba(255,45,120,0.9), 0 0 80px rgba(255,45,120,0.4); }
+  }
+
+  .handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 400;
+    color: rgba(200,214,229,0.5);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
   }
 
   .hero-desc {
     font-size: 15px;
-    line-height: 1.7;
-    color: rgba(200,214,229,0.7);
-    max-width: 520px;
-    margin: 24px 0 36px;
-  }
-
-  .hero-desc strong {
-    color: var(--cyan);
-    font-weight: 600;
+    line-height: 1.8;
+    color: rgba(200,214,229,0.65);
+    max-width: 420px;
+    margin-bottom: 40px;
+    border-left: 2px solid rgba(0,218,208,0.3);
+    padding-left: 16px;
   }
 
   .hero-actions {
@@ -174,17 +233,19 @@
     background: var(--cyan);
     color: #05050f;
     font-weight: 700;
-    font-size: 14px;
-    border-radius: 4px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 2px;
     text-decoration: none;
     transition: all 0.2s;
-    letter-spacing: 0.3px;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   .btn-primary:hover {
     background: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0,218,208,0.4);
+    box-shadow: 0 8px 30px rgba(0,218,208,0.5);
   }
 
   .btn-outline {
@@ -192,85 +253,100 @@
     align-items: center;
     gap: 8px;
     padding: 14px 28px;
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-size: 14px;
-    border-radius: 4px;
+    border: 1px solid rgba(0,218,208,0.3);
+    color: var(--cyan);
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 2px;
     text-decoration: none;
     transition: all 0.2s;
-    background: rgba(255,255,255,0.02);
+    font-family: 'JetBrains Mono', monospace;
   }
 
   .btn-outline:hover {
     border-color: var(--cyan);
-    color: var(--cyan);
+    background: rgba(0,218,208,0.08);
     transform: translateY(-2px);
   }
 
-  /* Avatar placeholder */
-  .hero-avatar {
-    width: 160px; height: 160px;
-    border-radius: 50%;
-    border: 2px solid var(--cyan);
-    box-shadow: 0 0 30px rgba(0,218,208,0.2), inset 0 0 30px rgba(0,218,208,0.05);
+  /* ticker */
+  .ticker-wrap {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 36px;
+    background: rgba(0,218,208,0.06);
+    border-top: 1px solid rgba(0,218,208,0.12);
     overflow: hidden;
-    flex-shrink: 0;
-    position: relative;
+    z-index: 3;
   }
 
-  .hero-avatar img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-  }
-
-  .avatar-initials {
-    width: 100%; height: 100%;
+  .ticker {
     display: flex;
+    white-space: nowrap;
+    animation: ticker-move 30s linear infinite;
+    height: 100%;
     align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #0d0d1a, #1a0a2e);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 42px;
-    font-weight: 700;
-    color: var(--cyan);
   }
 
-  /* SERVICES */
+  .ticker span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(0,218,208,0.5);
+    padding: 0 40px;
+  }
+
+  .ticker .sep { color: rgba(0,218,208,0.2); }
+
+  @keyframes ticker-move {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ───── SECTIONS ───── */
+  .page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
   .section {
-    padding: 60px 0;
+    padding: 80px 0;
     border-top: 1px solid var(--border);
   }
 
   .section-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 3px;
+    font-size: 10px;
+    letter-spacing: 4px;
     text-transform: uppercase;
     color: var(--cyan);
-    margin-bottom: 32px;
+    margin-bottom: 40px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
   }
 
   .section-label::after {
     content: '';
-    flex: 1;
-    height: 1px;
+    flex: 1; height: 1px;
     background: var(--border);
   }
 
+  /* CARDS */
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 16px;
   }
 
   .card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 28px;
+    border-radius: 4px;
+    padding: 32px;
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
@@ -279,55 +355,41 @@
   .card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0;
-    right: 0; height: 2px;
+    top: 0; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, var(--cyan), var(--purple));
     opacity: 0;
     transition: opacity 0.3s;
   }
 
-  .card:hover {
-    border-color: rgba(0,218,208,0.3);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  }
-
+  .card:hover { border-color: rgba(0,218,208,0.3); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
   .card:hover::before { opacity: 1; }
 
-  .card-icon {
-    font-size: 28px;
+  .card-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(0,218,208,0.4);
     margin-bottom: 16px;
-    display: block;
   }
 
-  .card-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 10px;
-  }
+  .card-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+  .card-text { font-size: 13px; line-height: 1.7; color: rgba(200,214,229,0.55); }
 
-  .card-text {
-    font-size: 13px;
-    line-height: 1.65;
-    color: rgba(200,214,229,0.6);
-  }
-
-  /* CONTACT */
+  /* CONTACTS */
   .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 12px;
   }
 
   .contact-item {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 20px 24px;
+    gap: 18px;
+    padding: 22px 26px;
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 4px;
     text-decoration: none;
     transition: all 0.2s;
     color: var(--text);
@@ -335,82 +397,74 @@
 
   .contact-item:hover {
     border-color: var(--cyan);
-    color: var(--cyan);
+    color: #fff;
     transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
   }
 
   .contact-icon {
-    font-size: 22px;
-    width: 44px; height: 44px;
+    font-size: 18px;
+    width: 42px; height: 42px;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(0,218,208,0.08);
-    border-radius: 8px;
+    background: rgba(0,218,208,0.06);
+    border: 1px solid rgba(0,218,208,0.12);
+    border-radius: 4px;
     flex-shrink: 0;
   }
 
   .contact-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 9px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: rgba(200,214,229,0.4);
+    color: rgba(200,214,229,0.35);
     margin-bottom: 4px;
   }
 
-  .contact-value {
-    font-size: 14px;
-    font-weight: 600;
-  }
+  .contact-value { font-size: 14px; font-weight: 600; }
 
-  /* FEEDBACK FORM */
+  /* FEEDBACK */
   .feedback-block {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 40px;
-    margin-top: 16px;
+    border-radius: 4px;
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
   }
 
-  .feedback-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 8px;
+  .feedback-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple), var(--pink));
   }
+
+  .feedback-title { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 6px; }
 
   .feedback-sub {
-    font-size: 13px;
-    color: rgba(200,214,229,0.5);
-    margin-bottom: 28px;
     font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(200,214,229,0.35);
+    margin-bottom: 32px;
   }
 
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 14px;
-  }
-
-  .form-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-field { display: flex; flex-direction: column; gap: 8px; }
 
   .form-field label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
+    font-size: 9px;
+    letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--cyan);
   }
 
   .form-field input,
   .form-field textarea {
-    background: rgba(255,255,255,0.03);
+    background: rgba(255,255,255,0.025);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 2px;
     padding: 12px 14px;
     color: #fff;
     font-size: 14px;
@@ -423,7 +477,7 @@
   .form-field input:focus,
   .form-field textarea:focus {
     border-color: var(--cyan);
-    box-shadow: 0 0 0 3px rgba(0,218,208,0.08);
+    box-shadow: 0 0 0 3px rgba(0,218,208,0.06);
   }
 
   .form-full { grid-column: 1 / -1; }
@@ -434,31 +488,46 @@
     align-items: center;
     gap: 8px;
     padding: 14px 32px;
-    background: linear-gradient(135deg, var(--cyan), var(--purple));
-    color: #fff;
+    background: var(--cyan);
+    color: #05050f;
     font-weight: 700;
-    font-size: 14px;
-    border-radius: 4px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 2px;
     border: none;
     cursor: pointer;
     transition: all 0.2s;
-    letter-spacing: 0.3px;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   .btn-send:hover {
-    opacity: 0.9;
+    background: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0,218,208,0.3);
+    box-shadow: 0 8px 30px rgba(0,218,208,0.4);
   }
 
   .form-note {
     margin-top: 12px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: rgba(200,214,229,0.35);
+    font-size: 10px;
+    color: rgba(200,214,229,0.25);
   }
 
-  /* FOOTER */
+  .form-success {
+    display: none;
+    padding: 18px;
+    background: rgba(0,218,208,0.06);
+    border: 1px solid rgba(0,218,208,0.25);
+    border-radius: 4px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--cyan);
+    margin-top: 16px;
+    letter-spacing: 2px;
+  }
+
   footer {
     border-top: 1px solid var(--border);
     padding: 28px 0;
@@ -466,100 +535,166 @@
     justify-content: space-between;
     align-items: center;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: rgba(200,214,229,0.3);
-    letter-spacing: 1px;
+    font-size: 10px;
+    color: rgba(200,214,229,0.25);
+    letter-spacing: 2px;
+    text-transform: uppercase;
   }
 
-  .footer-right a {
+  footer a { color: rgba(0,218,208,0.5); text-decoration: none; }
+  footer a:hover { color: var(--cyan); }
+
+  /* glitch on name */
+  .glitch-name {
+    position: relative;
+    display: inline-block;
+  }
+
+  .glitch-name::before,
+  .glitch-name::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    font-size: inherit; font-weight: inherit; letter-spacing: inherit; line-height: inherit;
+  }
+
+  .glitch-name::before {
+    color: var(--pink);
+    animation: glitch-before 8s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  }
+
+  .glitch-name::after {
     color: var(--cyan);
-    text-decoration: none;
+    animation: glitch-after 8s infinite;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
   }
 
-  /* Glitch animation for name */
-  @keyframes glitch {
-    0%, 90%, 100% { clip-path: none; transform: none; }
-    92% { clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%); transform: translateX(-3px); }
-    94% { clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); transform: translateX(3px); }
-    96% { clip-path: none; transform: none; }
+  @keyframes glitch-before {
+    0%,85%,100% { transform: none; opacity: 0; }
+    87% { transform: translateX(-4px); opacity: 0.8; }
+    89% { transform: translateX(4px); opacity: 0.8; }
+    91% { transform: none; opacity: 0; }
   }
 
-  h1 { animation: glitch 8s ease-in-out infinite; }
+  @keyframes glitch-after {
+    0%,85%,100% { transform: none; opacity: 0; }
+    88% { transform: translateX(4px); opacity: 0.8; }
+    90% { transform: translateX(-3px); opacity: 0.8; }
+    92% { transform: none; opacity: 0; }
+  }
 
-  /* Mobile */
-  @media (max-width: 640px) {
-    .hero { grid-template-columns: 1fr; }
-    .hero-avatar { display: none; }
+  @media (max-width: 768px) {
+    .hero-character { width: 100%; opacity: 0.3; right: 0; }
+    .hero-scanner { width: 100%; }
+    .hero-content { max-width: 100%; padding: 80px 24px; }
+    .hero-desc { border-left: none; padding-left: 0; }
+    .page { padding: 0 20px; }
     .contact-grid { grid-template-columns: 1fr; }
     .form-row { grid-template-columns: 1fr; }
-    nav { flex-direction: column; gap: 8px; }
-    .feedback-block { padding: 24px; }
+    .feedback-block { padding: 28px 20px; }
+    .hud-tr, .hud-br { display: none; }
+    footer { flex-direction: column; gap: 8px; }
+    h1 { letter-spacing: -1px; }
   }
 </style>
 </head>
 <body>
 
-<div class="container">
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bloom"></div>
 
-  <!-- NAV -->
-  <nav>
-    <div class="nav-logo">vspandexe.com</div>
-    <div class="nav-status">
-      <span class="status-dot"></span>
-      Открыт к новым проектам
-    </div>
-  </nav>
+  <img class="hero-character" src="avatar.png" alt="" onerror="this.style.opacity='0'">
+  <div class="hero-scanner"></div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div>
-      <div class="hero-tag">AI Consultant</div>
-      <h1>Станислав<br><span class="name-accent">Никулин</span></h1>
-      <p class="hero-desc">
-        Консультант по созданию и настройке <strong>мультифункциональных AI агентов</strong>
-        под любые задачи и автоматизацию бизнеса.<br><br>
-        Проектирую, внедряю и запускаю умных агентов — от Telegram-ботов
-        до полноценных автопилотов для бизнес-процессов.
-      </p>
-      <div class="hero-actions">
-        <a href="https://t.me/VSpandexe" class="btn-primary" target="_blank">
-          ✦ Написать в Telegram
-        </a>
-        <a href="mailto:i@vspandexe.ru" class="btn-outline">
-          Написать на email
-        </a>
-      </div>
-    </div>
-    <div class="hero-avatar">
-      <div class="avatar-initials">СН</div>
-    </div>
-  </section>
+  <!-- HUD corners -->
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
 
-  <!-- SERVICES -->
+  <div class="hud hud-tl">
+    <span class="hud-dot"></span>SYS // ONLINE<br>
+    VSPANDEXE.COM<br>
+    V 1.0
+  </div>
+  <div class="hud hud-tr">
+    AI CONSULTANT<br>
+    NL // 24 / 7
+  </div>
+  <div class="hud hud-bl">
+    <span id="hud-time">00:00:00</span><br>
+    UTC+3
+  </div>
+  <div class="hud hud-br">
+    OPEN TO PROJECTS<br>
+    TELEGRAM 24/7
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-label">AI Consultant</div>
+    <h1>
+      <span class="glitch-name" data-text="Stas">Stas</span><span class="exclaim">!</span>
+    </h1>
+    <div class="handle">"VSpandexe"</div>
+    <p class="hero-desc">
+      Создаю мультифункциональных AI агентов и автоматизации под любые задачи бизнеса. Проектирую, внедряю, запускаю.
+    </p>
+    <div class="hero-actions">
+      <a href="https://t.me/VSpandexe" class="btn-primary" target="_blank">
+        ▶ Telegram
+      </a>
+      <a href="mailto:i@vspandexe.ru" class="btn-outline">
+        i@vspandexe.ru
+      </a>
+    </div>
+  </div>
+
+  <!-- ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>AI агенты</span><span class="sep">///</span>
+      <span>Автоматизация бизнеса</span><span class="sep">///</span>
+      <span>Telegram боты</span><span class="sep">///</span>
+      <span>Консультации</span><span class="sep">///</span>
+      <span>24 / 7</span><span class="sep">///</span>
+      <span>VSpandexe</span><span class="sep">///</span>
+      <span>AI агенты</span><span class="sep">///</span>
+      <span>Автоматизация бизнеса</span><span class="sep">///</span>
+      <span>Telegram боты</span><span class="sep">///</span>
+      <span>Консультации</span><span class="sep">///</span>
+      <span>24 / 7</span><span class="sep">///</span>
+      <span>VSpandexe</span><span class="sep">///</span>
+    </div>
+  </div>
+</section>
+
+<div class="page">
+
   <section class="section">
-    <div class="section-label">Чем занимаюсь</div>
+    <div class="section-label">// Чем занимаюсь</div>
     <div class="cards">
       <div class="card">
-        <span class="card-icon">🤖</span>
+        <div class="card-num">01 //</div>
         <div class="card-title">AI агенты</div>
-        <div class="card-text">Персональные и командные AI агенты под конкретные задачи. Работают 24/7, помнят контекст, обучаются на ваших данных.</div>
+        <div class="card-text">Персональные и командные AI агенты под конкретные задачи. Работают 24/7, помнят контекст, учатся на ваших данных.</div>
       </div>
       <div class="card">
-        <span class="card-icon">⚡</span>
+        <div class="card-num">02 //</div>
         <div class="card-title">Автоматизация</div>
-        <div class="card-text">Замена ручных процессов умными скриптами и агентами: рассылки, парсинг, отчёты, мониторинг, интеграции с API.</div>
+        <div class="card-text">Замена ручных процессов умными агентами: рассылки, парсинг, отчёты, мониторинг, интеграции с любыми API.</div>
       </div>
       <div class="card">
-        <span class="card-icon">💬</span>
+        <div class="card-num">03 //</div>
         <div class="card-title">Telegram боты</div>
         <div class="card-text">От простых уведомлений до полноценных CRM-систем в мессенджере. С AI, платёжками, аналитикой.</div>
       </div>
     </div>
   </section>
 
-  <!-- CONTACTS -->
   <section class="section">
-    <div class="section-label">Контакты</div>
+    <div class="section-label">// Контакты</div>
     <div class="contact-grid">
       <a href="https://t.me/VSpandexe" class="contact-item" target="_blank">
         <div class="contact-icon">✈️</div>
@@ -582,52 +717,75 @@
           <div class="contact-value">Vspandexe</div>
         </div>
       </a>
-      <div class="contact-item" style="cursor:default;">
-        <div class="contact-icon">🌐</div>
+      <a href="https://t.me/VSpandexe" class="contact-item" target="_blank">
+        <div class="contact-icon">◈</div>
         <div>
-          <div class="contact-label">Сайт</div>
-          <div class="contact-value">vspandexe.com</div>
+          <div class="contact-label">Написать напрямую</div>
+          <div class="contact-value">Открыт к проектам</div>
         </div>
-      </div>
+      </a>
     </div>
   </section>
 
-  <!-- FEEDBACK -->
   <section class="section">
-    <div class="section-label">Обратная связь</div>
+    <div class="section-label">// Обратная связь</div>
     <div class="feedback-block">
       <div class="feedback-title">Есть задача?</div>
-      <div class="feedback-sub">// опишите — отвечу в течение дня</div>
-      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <div class="feedback-sub">// опишите — открою Telegram с вашим сообщением</div>
+      <form id="contact-form">
         <div class="form-row">
           <div class="form-field">
             <label>Имя</label>
-            <input type="text" name="name" placeholder="Ваше имя" required>
+            <input type="text" id="f-name" placeholder="Ваше имя" required>
           </div>
           <div class="form-field">
             <label>Контакт</label>
-            <input type="text" name="contact" placeholder="Telegram / Email">
+            <input type="text" id="f-contact" placeholder="Telegram / Email">
           </div>
         </div>
         <div class="form-row">
           <div class="form-field form-full">
             <label>Сообщение</label>
-            <textarea name="message" rows="4" placeholder="Опишите задачу..." required></textarea>
+            <textarea id="f-message" rows="4" placeholder="Опишите задачу..." required></textarea>
           </div>
         </div>
-        <button type="submit" class="btn-send">✦ Отправить</button>
-        <div class="form-note">// или напишите напрямую в Telegram — быстрее</div>
+        <button type="submit" class="btn-send">▶ Отправить в Telegram</button>
+        <div class="form-note">// нажатие откроет Telegram с готовым сообщением</div>
       </form>
+      <div class="form-success" id="form-success">// ОТКРЫВАЮ TELEGRAM...</div>
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
-    <span>© 2026 Станислав Никулин</span>
-    <span class="footer-right"><a href="https://t.me/VSpandexe">@VSpandexe</a></span>
+    <span>© 2026 Stas "VSpandexe"</span>
+    <span><a href="https://t.me/VSpandexe">@VSpandexe</a></span>
   </footer>
 
 </div>
+
+<script>
+  // HUD clock
+  function updateTime() {
+    const now = new Date();
+    const t = now.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit', second:'2-digit', timeZone:'Europe/Moscow'});
+    const el = document.getElementById('hud-time');
+    if (el) el.textContent = t;
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+
+  // Form
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('f-name').value.trim();
+    const contact = document.getElementById('f-contact').value.trim();
+    const message = document.getElementById('f-message').value.trim();
+    const text = `Привет! Меня зовут ${name}.${contact ? ' Мой контакт: ' + contact + '.' : ''}\n\n${message}`;
+    const url = `https://t.me/VSpandexe?text=${encodeURIComponent(text)}`;
+    document.getElementById('form-success').style.display = 'block';
+    setTimeout(() => window.open(url, '_blank'), 300);
+  });
+</script>
 
 </body>
 </html>
